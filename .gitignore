@@ -4,6 +4,7 @@ node_modules
 /deploy
 *.zip
 /public/test.json
+.hostingConfig.json
 
 # local env files
 .env.local
