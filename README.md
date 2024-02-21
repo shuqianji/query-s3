@@ -1,6 +1,6 @@
 # Query S3
 
-[Preview URL](https://query-s3.xxx)
+See it [live](https://query-s3.4everland.app/)
 
 ## Project setup
 
