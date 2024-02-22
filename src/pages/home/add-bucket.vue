@@ -14,21 +14,37 @@
             <el-radio v-model="form.plat" label="cos">COS</el-radio>
           </el-form-item>
           <!-- v-if="form.plat == 'aws3'" -->
-          <template>
-            <el-form-item label="API Key">
+          <el-form-item label="JSON Input">
+            <el-switch v-model="asJson" />
+          </el-form-item>
+          <el-form-item v-if="asJson" label="Config">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 6, maxRows: 8 }"
+              v-model="jsonVal"
+            />
+          </el-form-item>
+          <template v-else>
+            <el-form-item label="Key ID">
               <el-input v-model="form.accessKeyId" clearable></el-input>
             </el-form-item>
-            <el-form-item label="API Secrect">
+            <el-form-item label="Secrect">
               <el-input v-model="form.secretAccessKey" clearable></el-input>
             </el-form-item>
-            <el-form-item label="Region">
-              <el-input v-model="form.region" clearable></el-input>
-            </el-form-item>
+            <div class="al-c">
+              <el-form-item label="Region">
+                <el-input v-model="form.region" clearable></el-input>
+              </el-form-item>
+            </div>
             <el-form-item label="Endpoint" v-if="form.plat == 'aws3'">
               <el-input v-model="form.endpoint" clearable></el-input>
             </el-form-item>
             <el-form-item label="Bucket" v-else>
-              <el-input v-model="form.bucket" clearable></el-input>
+              <el-input
+                v-model="form.bucket"
+                clearable
+                placeholder="Multiple buckets can be separated by commas"
+              ></el-input>
             </el-form-item>
           </template>
 

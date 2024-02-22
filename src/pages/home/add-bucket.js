@@ -1,11 +1,11 @@
 import { mapState } from "vuex";
 const initForm = {
   plat: "aws3",
-  bucket: "",
-  endpoint: "",
-  region: "",
   accessKeyId: "",
   secretAccessKey: "",
+  region: "",
+  endpoint: "",
+  bucket: "",
 };
 
 export default {
@@ -14,6 +14,22 @@ export default {
       bucketList: (s) => s.bucketList,
       asMobile: (s) => s.asMobile,
     }),
+    configParse() {
+      try {
+        return JSON.parse(this.jsonVal);
+      } catch (error) {
+        return null;
+      }
+    },
+    configForm() {
+      if (this.asJson) {
+        return {
+          ...this.form,
+          ...this.configParse,
+        };
+      }
+      return this.form;
+    },
   },
   data() {
     return {
@@ -26,23 +42,52 @@ export default {
       apiChecking: false,
       apiChecked: false,
       posting: false,
+      asJson: true,
+      jsonVal: "",
     };
   },
   watch: {
+    configParse(val) {
+      if (!val) {
+        this.$alert("Invalid JSON format: " + this.jsonVal);
+        this.initJsonVal();
+      } else {
+        this.form = {
+          ...this.form,
+          ...val,
+        };
+      }
+    },
     "form.plat"() {
-      this.checkBuckets = [];
-      this.apiChecked = false;
+      this.resetBuckets();
+      this.initJsonVal();
     },
     "form.accessKeyId"() {
+      this.resetBuckets();
+    },
+  },
+  mounted() {
+    this.initJsonVal();
+  },
+  methods: {
+    resetBuckets() {
       this.apiChecked = false;
       this.checkBuckets = [];
       this.apiBuckets = [];
     },
-  },
-  methods: {
+    initJsonVal() {
+      const form = { ...this.form };
+      if (form.plat == "aws3") {
+        delete form.bucket;
+      } else {
+        delete form.endpoint;
+      }
+      delete form.plat;
+      this.jsonVal = JSON.stringify(form, "", "  ");
+    },
     async onSubmit() {
       const form = {
-        ...this.form,
+        ...this.configForm,
       };
       // console.log(form);
       try {
@@ -76,6 +121,7 @@ export default {
           this.form = {
             ...initForm,
           };
+          this.initJsonVal();
           this.checkBuckets = [];
         } else if (oldArr.length) {
           this.$message("Already exist：" + oldArr.join(", "));
@@ -88,7 +134,7 @@ export default {
     async checkApi() {
       let msg = "";
       try {
-        const form = { ...this.form };
+        const form = { ...this.configForm };
         if (!form.accessKeyId) msg = "API Key required";
         else if (!form.secretAccessKey) msg = "API Secret required";
         else if (!form.region) msg = "Region required";
