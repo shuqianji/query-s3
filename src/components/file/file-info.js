@@ -85,6 +85,7 @@ export default {
     },
     async onFile() {
       this.src = null;
+      this.isOnline = false;
       this.loadMeta = {};
       this.resType = null;
       this.resData = null;
@@ -96,6 +97,7 @@ export default {
       // console.log(this.file);
       if (src) {
         this.src = src;
+        this.isOnline = true;
       } else if (etag) {
         const url = await this.qs3.signatureUrl({
           name,

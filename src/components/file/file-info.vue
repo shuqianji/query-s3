@@ -142,6 +142,7 @@ export default {
   data() {
     return {
       src: null,
+      isOnline: false,
       loadMeta: {},
       resType: null,
       resData: null,
@@ -222,7 +223,7 @@ export default {
           value: info.etag,
         });
       }
-      if (info.url)
+      if (info.url && this.isOnline)
         list.push({
           label: "URL",
           value: info.url.replace(/\?.+/, ""),
@@ -235,6 +236,8 @@ export default {
       return type == "application/octet-stream" || !/\//.test(type);
     },
     isFrame() {
+      if (!this.file) return false;
+      if (this.file.size > 1 * Math.pow(1024, 2)) return false;
       if (this.isTxt) return true;
       const { suffix } = this.info;
       return ["docx", "pdf", "xlsx"].includes(suffix);
