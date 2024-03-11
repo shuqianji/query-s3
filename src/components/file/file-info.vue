@@ -33,7 +33,7 @@
         <iframe
           v-else-if="isFrame"
           :src="
-            `https://preview.4everland.org/${isTxt ? 'code' : ''}?type=${
+            `https://vue-preview.4everland.app/${isTxt ? 'code' : ''}?type=${
               info.suffix
             }&src=` + encodeURIComponent(src)
           "
@@ -223,7 +223,7 @@ export default {
           value: info.etag,
         });
       }
-      if (info.url && this.isOnline)
+      if (info.url)
         list.push({
           label: "URL",
           value: info.url.replace(/\?.+/, ""),
